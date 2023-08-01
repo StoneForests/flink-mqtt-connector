@@ -79,6 +79,6 @@ public class MqttOptions {
     public static final ConfigOption<Integer> SINK_PARALLELISM =
             ConfigOptions.key("sinkParallelism")
                     .intType()
-                    .defaultValue(Runtime.getRuntime().availableProcessors())
+                    .defaultValue(1)
                     .withDescription("the mqtt's sink parallelism.");
 }
