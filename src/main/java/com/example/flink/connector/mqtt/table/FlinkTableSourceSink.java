@@ -42,6 +42,7 @@ public class FlinkTableSourceSink {
                 "    'autoReconnect' = 'true',\n" +
                 "    'connectionTimeout' = '30',\n" +
                 "    'keepAliveInterval' = '60',\n" +
+                "    'sinkParallelism' = '4',\n" +
                 "    'format' = 'json'\n" +
                 ")";
         tEnv.executeSql(sinkSql);

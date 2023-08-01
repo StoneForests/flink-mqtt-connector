@@ -29,6 +29,7 @@
 <!--            <groupId>ch.qos.logback</groupId>-->
 <!--            <artifactId>logback-classic</artifactId>-->
 <!--            <version>1.2.3</version>-->
+<!--            <scope>provided</scope>-->
 <!--        </dependency>-->
 <!--        &lt;!&ndash;选择 Java 或者 Scala API 来构建你的 Table API 和 SQL 程序&ndash;&gt;-->
 <!--        <dependency>-->
@@ -61,18 +62,6 @@
 <!--        <dependency>-->
 <!--            <groupId>org.apache.flink</groupId>-->
 <!--            <artifactId>flink-json</artifactId>-->
-<!--            <version>${flink.version}</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.flink</groupId>-->
-<!--            <artifactId>flink-java</artifactId>-->
-<!--            <version>${flink.version}</version>-->
-<!--            <scope>provided</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.flink</groupId>-->
-<!--            <artifactId>flink-clients_${scala.binary.version}</artifactId>-->
 <!--            <version>${flink.version}</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
@@ -164,6 +153,7 @@
                                         <exclude>META-INF/*.SF</exclude>
                                         <exclude>META-INF/*.DSA</exclude>
                                         <exclude>META-INF/*.RSA</exclude>
+                                        <exclude>logback.xml</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
