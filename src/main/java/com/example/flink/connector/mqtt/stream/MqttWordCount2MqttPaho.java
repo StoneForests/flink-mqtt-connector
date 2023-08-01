@@ -14,12 +14,13 @@ public class MqttWordCount2MqttPaho {
         /**
          * 监听mqtt topicIn的消息，统计每个单词出现的次数后将结果发送给mqtt  topicOut
          */
-        String broker = "tcp://192.168.1.1:1883"; //mqtt的broker地址
-        String username = "abcabc";  //mqtt的账号
-        String password = "123123";  //mqtt的密码
-        String topicIn = "mqtt/wordCount";   //监听的mqtt topic
-        String topicOut = "mqtt/wordCount";  //发送的mqtt topic
+        String broker = "tcp://10.0.113.61:1883"; //mqtt的broker地址
+        String username = "emqxadmin";  //mqtt的账号
+        String password = "JevDDzb!5Qfh5Fmr";  //mqtt的密码
+        String topicIn = "mqtt/source1";   //监听的mqtt topic
+        String topicOut = "mqtt/sink1";  //发送的mqtt topic
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
         // get input data
         DataStream<MyMqttMessage> text = env.addSource(new MqttSourcePaho(broker, username, password, topicIn, 0));
 

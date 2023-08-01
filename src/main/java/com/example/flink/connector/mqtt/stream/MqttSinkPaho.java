@@ -28,9 +28,13 @@ public class MqttSinkPaho<T> extends RichSinkFunction<T> {
 
     @Override
     public void invoke(T event, Context context) throws Exception {
-        log.info("MqttSink invoke...");
+        if (log.isDebugEnabled()) {
+            log.debug("MqttSink invoke...");
+        }
         byte[] payload = event.toString().getBytes();
-        log.info("messge is {}", event);
+        if (log.isDebugEnabled()) {
+            log.debug("messge is {}", event);
+        }
         int qos = 0;
         // 创建消息并设置 QoS
         MqttMessage message = new MqttMessage(payload);
@@ -40,7 +44,8 @@ public class MqttSinkPaho<T> extends RichSinkFunction<T> {
 
     @Override
     public void close() throws Exception {
-        log.info("MqttSink close...");
+        log.info("sink close...");
+
         super.close();
         // 关闭连接
         client.disconnect();
@@ -50,7 +55,8 @@ public class MqttSinkPaho<T> extends RichSinkFunction<T> {
 
     @Override
     public void open(Configuration parameters) throws Exception {
-        log.info("MqttSink open...");
+        log.info("sink open...");
+
         super.open(parameters);
         String clientId = "FlinkTest_" + Thread.currentThread().getId() % 10000 + "_" + System.currentTimeMillis() % 100000;
         client = new MqttClient(broker, clientId, new MemoryPersistence());

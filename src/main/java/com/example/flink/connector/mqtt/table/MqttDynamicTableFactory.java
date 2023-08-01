@@ -3,7 +3,6 @@ package com.example.flink.connector.mqtt.table;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.ConfigOption;
-import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.ReadableConfig;
 import org.apache.flink.table.catalog.ResolvedSchema;
 import org.apache.flink.table.connector.format.DecodingFormat;
@@ -15,15 +14,15 @@ import org.apache.flink.table.factories.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
+import static com.example.flink.connector.mqtt.table.MqttOptions.*;
 import static org.apache.flink.table.factories.FactoryUtil.createTableFactoryHelper;
 
 public class MqttDynamicTableFactory implements DynamicTableSourceFactory, DynamicTableSinkFactory {
 
     @Override
     /**
-     * TODO　１、创建动态表source
+     * １、创建动态表source和sink
      * DynamicTableFactory需要具备以下功能：
      *      -定义与校验建表时传入的各项参数；
      *      -获取表的元数据；
@@ -70,17 +69,16 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
     }
 
     @Override
-    //TODO　２、指定工厂类的标识符，该标识符就是建表时必须填写的connector参数的值
+    //２、指定工厂类的标识符，该标识符就是建表时必须填写的connector参数的值
     public String factoryIdentifier() {
         return "mqtt";
     }
 
     @Override
-    //TODO 3、with里面必须要填写的属性配置
+    //3、with里面必须要填写的属性配置
     public Set<ConfigOption<?>> requiredOptions() {
         final Set<ConfigOption<?>> options = new HashSet<>();
-        options.add(HOSTURL);
-        options.add(TOPIC);
+        options.add(HOST_URL);
         options.add(USERNAME);
         options.add(PASSWORD);
         options.add(FactoryUtil.FORMAT); // use pre-defined option for format
@@ -88,43 +86,18 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
     }
 
     @Override
-    //TODO　４、with里面非必须填写属性配置
+    //４、with里面非必须填写属性配置
     public Set<ConfigOption<?>> optionalOptions() {
         final Set<ConfigOption<?>> options = new HashSet<>();
-        options.add(CLIENTID);
+        options.add(CLIENT_ID_PREFIX);
+        options.add(SOURCE_TOPICS);
+        options.add(SINK_TOPICS);
+        options.add(QOS);
+        options.add(AUTOMATIC_RECONNECT);
+        options.add(CLEAN_SESSION);
+        options.add(CONNECTION_TIMEOUT);
+        options.add(KEEP_ALIVE_INTERVAL);
         return options;
     }
-
-    //TODO 5、定义MQTT Connector需要的各项参数
-    public static final ConfigOption<String> HOSTURL =
-            ConfigOptions.key("hosturl")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect hosturl.");
-
-    public static final ConfigOption<String> USERNAME =
-            ConfigOptions.key("username")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect username.");
-
-    public static final ConfigOption<String> PASSWORD =
-            ConfigOptions.key("password")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect password.");
-
-    public static final ConfigOption<String> TOPIC =
-            ConfigOptions.key("topic")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect topic.");
-
-    public static final ConfigOption<String> CLIENTID =
-            ConfigOptions.key("clientid")
-                    .stringType()
-                    .defaultValue(String.valueOf(UUID.randomUUID()))
-                    .withDescription("the mqtt's connect clientId.");
-
 
 }
