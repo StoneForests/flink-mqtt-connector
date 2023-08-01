@@ -11,7 +11,7 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.example.flink.connector.mqtt.table.MqttDynamicTableFactory.*;
+import static com.example.flink.connector.mqtt.table.MqttOptions.*;
 
 public class MqttSinkFunction<T> extends RichSinkFunction<T> {
     private static final Logger log = LoggerFactory.getLogger(MqttSinkFunction.class);

@@ -3,7 +3,6 @@ package com.example.flink.connector.mqtt.table;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.configuration.ConfigOption;
-import org.apache.flink.configuration.ConfigOptions;
 import org.apache.flink.configuration.ReadableConfig;
 import org.apache.flink.table.catalog.ResolvedSchema;
 import org.apache.flink.table.connector.format.DecodingFormat;
@@ -15,8 +14,8 @@ import org.apache.flink.table.factories.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
+import static com.example.flink.connector.mqtt.table.MqttOptions.*;
 import static org.apache.flink.table.factories.FactoryUtil.createTableFactoryHelper;
 
 public class MqttDynamicTableFactory implements DynamicTableSourceFactory, DynamicTableSinkFactory {
@@ -94,37 +93,5 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
         options.add(CLIENTID);
         return options;
     }
-
-    //TODO 5、定义MQTT Connector需要的各项参数
-    public static final ConfigOption<String> HOSTURL =
-            ConfigOptions.key("hosturl")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect hosturl.");
-
-    public static final ConfigOption<String> USERNAME =
-            ConfigOptions.key("username")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect username.");
-
-    public static final ConfigOption<String> PASSWORD =
-            ConfigOptions.key("password")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect password.");
-
-    public static final ConfigOption<String> TOPIC =
-            ConfigOptions.key("topic")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's connect topic.");
-
-    public static final ConfigOption<String> CLIENTID =
-            ConfigOptions.key("clientid")
-                    .stringType()
-                    .defaultValue(String.valueOf(UUID.randomUUID()))
-                    .withDescription("the mqtt's connect clientId.");
-
 
 }

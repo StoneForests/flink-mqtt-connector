@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import static com.example.flink.connector.mqtt.table.MqttDynamicTableFactory.*;
+import static com.example.flink.connector.mqtt.table.MqttOptions.*;
 
 
 public class MqttSourceFunction extends RichSourceFunction<RowData> {
