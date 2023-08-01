@@ -27,7 +27,8 @@ public class MqttSourcePaho extends RichSourceFunction<MyMqttMessage> implements
     }
 
     private void connect() throws MqttException {
-        log.info("MqttSourcePaho connect");
+        log.info("source connect...");
+
         MqttConnectOptions connOpts = new MqttConnectOptions();
         connOpts.setUserName(this.userName);
         connOpts.setPassword(this.password.toCharArray());
@@ -59,9 +60,11 @@ public class MqttSourcePaho extends RichSourceFunction<MyMqttMessage> implements
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) {
-                log.info("接收消息主题:" + topic);
-                log.info("接收消息Qos:" + mqttMessage.getQos());
-                log.info("接收消息内容:" + new String(mqttMessage.getPayload()));
+                if (log.isDebugEnabled()) {
+                    log.debug("接收消息主题:" + topic);
+                    log.debug("接收消息Qos:" + mqttMessage.getQos());
+                    log.debug("接收消息内容:\n" + new String(mqttMessage.getPayload()));
+                }
                 String payload = new String(mqttMessage.getPayload());
                 MyMqttMessage message = new MyMqttMessage(topic, payload);
                 if (payload.equals("stop")) {
@@ -73,7 +76,9 @@ public class MqttSourcePaho extends RichSourceFunction<MyMqttMessage> implements
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
                 // 消息交付完成的回调方法
-                log.info("deliveryComplete---------" + iMqttDeliveryToken.isComplete());
+                if (log.isDebugEnabled()) {
+                    log.debug("deliveryComplete---------" + iMqttDeliveryToken.isComplete());
+                }
             }
         });
 
@@ -88,20 +93,24 @@ public class MqttSourcePaho extends RichSourceFunction<MyMqttMessage> implements
 
     @Override
     public void run(SourceContext<MyMqttMessage> sourceContext) throws MqttException, InterruptedException {
-        log.info("MqttSourcePaho run...");
+        log.info("source run...");
+
         this.ctx = sourceContext;
         this.running = true;
         connect();
         while (running) {
             // 继续运行，直到调用 cancel() 方法
-            log.info("MqttSourcePaho keep running...");
+            if (log.isDebugEnabled()) {
+                log.debug("MqttSourcePaho keep running...");
+            }
             Thread.sleep(10000);
         }
     }
 
     @Override
     public void cancel() {
-        log.info("MqttSourcePaho cancel...");
+        log.info("source cancel...");
+
         running = false;
         // 关闭连接
         try {

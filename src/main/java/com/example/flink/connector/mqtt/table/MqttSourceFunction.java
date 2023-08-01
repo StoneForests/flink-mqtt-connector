@@ -1,37 +1,50 @@
 package com.example.flink.connector.mqtt.table;
 
 import org.apache.flink.api.common.serialization.DeserializationSchema;
-import org.apache.flink.configuration.ReadableConfig;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
-import org.apache.flink.table.data.RowData;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import static com.example.flink.connector.mqtt.table.MqttOptions.*;
 
-
-public class MqttSourceFunction extends RichSourceFunction<RowData> {
+public class MqttSourceFunction<T> extends RichSourceFunction<T> {
     private static final Logger log = LoggerFactory.getLogger(MqttSourceFunction.class);
 
     private static final long serialVersionUID = 6241249297629516864L;
     private transient volatile boolean running;
-    //MQTT连接配置信息
-    private ReadableConfig conf;
     //阻塞队列存储订阅的消息
-    private BlockingQueue<RowData> queue = new ArrayBlockingQueue<>(10);
+    private final BlockingQueue<T> queue = new ArrayBlockingQueue<>(10);
     //存储服务
     private MqttClient client;
+    //MQTT连接配置信息
+    private final String topics;
+    private final String hostUrl;
+    private final String username;
+    private final String password;
+    private final String clientIdPrefix;
+    private final boolean automaticReconnect;
+    private final boolean cleanSession;
+    private final Integer connectionTimeout;
+    private final Integer keepAliveInterval;
     //存储订阅主题
-    private DeserializationSchema<RowData> deserializer;
+    private final DeserializationSchema<T> deserializer;
 
-    public MqttSourceFunction(ReadableConfig options, DeserializationSchema<RowData> deserializer) {
-        this.conf = options;
+    public MqttSourceFunction(String hostUrl, String username, String password, String topics, boolean cleanSession, String clientIdPrefix, boolean automaticReconnect, Integer connectionTimeout, Integer keepAliveInterval, DeserializationSchema<T> deserializer) {
+        this.topics = topics;
+        this.hostUrl = hostUrl;
+        this.username = username;
+        this.password = password;
+        this.cleanSession = cleanSession;
+        this.clientIdPrefix = clientIdPrefix;
+        this.automaticReconnect = automaticReconnect;
+        this.connectionTimeout = connectionTimeout;
+        this.keepAliveInterval = keepAliveInterval;
         this.deserializer = deserializer;
     }
 
@@ -39,23 +52,20 @@ public class MqttSourceFunction extends RichSourceFunction<RowData> {
     private void connect() throws MqttException {
         //连接mqtt服务器
         log.info("source connect...");
-        this.client = new MqttClient(conf.get(HOSTURL), conf.get(CLIENTID), new MemoryPersistence());
+        String clientId = this.clientIdPrefix + "_" + UUID.randomUUID();
+        this.client = new MqttClient(this.hostUrl, clientId, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
-        options.setUserName(this.conf.get(USERNAME));
-        options.setPassword(this.conf.get(PASSWORD).toCharArray());
-        options.setCleanSession(true);   //是否清除session
+        options.setUserName(this.username);
+        options.setPassword(this.password.toCharArray());
+        options.setCleanSession(this.cleanSession);   //是否清除session
         // 设置超时时间
-        options.setConnectionTimeout(30);
+        options.setConnectionTimeout(this.connectionTimeout);
         // 设置会话心跳时间
-        options.setKeepAliveInterval(60);
-        options.setAutomaticReconnect(true);
+        options.setKeepAliveInterval(this.keepAliveInterval);
+        options.setAutomaticReconnect(this.automaticReconnect);
 
-        String[] topics = this.conf.get(TOPIC).split(",");
+        String[] topics = this.topics.split(",");
         //订阅消息
-        int[] qos = new int[topics.length];
-        for (int i = 0; i < topics.length; i++) {
-            qos[i] = 1;
-        }
         this.client.connect(options);
         this.client.setCallback(new MqttCallback() {
             @Override
@@ -71,20 +81,25 @@ public class MqttSourceFunction extends RichSourceFunction<RowData> {
 
             @Override
             public void messageArrived(String topic, MqttMessage mqttMessage) throws IOException, InterruptedException {
-//                log.info("接收消息主题:" + topic);
-//                log.info("接收消息Qos:" + mqttMessage.getQos());
-//                log.info("接收消息内容:" + new String(mqttMessage.getPayload()));
+                if (log.isDebugEnabled()) {
+                    log.debug("接收消息主题:" + topic);
+                    log.debug("接收消息Qos:" + mqttMessage.getQos());
+                    log.debug("接收消息内容:\n" + new String(mqttMessage.getPayload()));
+                }
                 queue.put(deserializer.deserialize(mqttMessage.getPayload()));
+
             }
 
             @Override
             public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
                 // 消息交付完成的回调方法
-                log.info("source deliveryComplete---------" + iMqttDeliveryToken.isComplete());
+                if (log.isDebugEnabled()) {
+                    log.debug("source deliveryComplete---------" + iMqttDeliveryToken.isComplete());
+                }
             }
         });
 
-        this.client.subscribe(topics, qos);
+        this.client.subscribe(topics);
     }
 
     private void reconnect() throws MqttException {
@@ -98,7 +113,7 @@ public class MqttSourceFunction extends RichSourceFunction<RowData> {
 
     //flink线程启动函数
     @Override
-    public void run(SourceContext<RowData> ctx) throws Exception {
+    public void run(SourceContext<T> ctx) throws Exception {
         log.info("source run...");
         this.running = true;
         connect();
@@ -112,7 +127,7 @@ public class MqttSourceFunction extends RichSourceFunction<RowData> {
     @Override
     public void cancel() {
         log.info("source cancel...");
-        running = false;
+        this.running = false;
         try {
             if (null != this.client && this.client.isConnected()) {
                 this.client.disconnect();

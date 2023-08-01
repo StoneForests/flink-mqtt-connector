@@ -22,7 +22,7 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
 
     @Override
     /**
-     * TODO　１、创建动态表source
+     * １、创建动态表source和sink
      * DynamicTableFactory需要具备以下功能：
      *      -定义与校验建表时传入的各项参数；
      *      -获取表的元数据；
@@ -69,17 +69,16 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
     }
 
     @Override
-    //TODO　２、指定工厂类的标识符，该标识符就是建表时必须填写的connector参数的值
+    //２、指定工厂类的标识符，该标识符就是建表时必须填写的connector参数的值
     public String factoryIdentifier() {
         return "mqtt";
     }
 
     @Override
-    //TODO 3、with里面必须要填写的属性配置
+    //3、with里面必须要填写的属性配置
     public Set<ConfigOption<?>> requiredOptions() {
         final Set<ConfigOption<?>> options = new HashSet<>();
-        options.add(HOSTURL);
-        options.add(TOPIC);
+        options.add(HOST_URL);
         options.add(USERNAME);
         options.add(PASSWORD);
         options.add(FactoryUtil.FORMAT); // use pre-defined option for format
@@ -87,10 +86,17 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
     }
 
     @Override
-    //TODO　４、with里面非必须填写属性配置
+    //４、with里面非必须填写属性配置
     public Set<ConfigOption<?>> optionalOptions() {
         final Set<ConfigOption<?>> options = new HashSet<>();
-        options.add(CLIENTID);
+        options.add(CLIENT_ID_PREFIX);
+        options.add(SOURCE_TOPICS);
+        options.add(SINK_TOPICS);
+        options.add(QOS);
+        options.add(AUTOMATIC_RECONNECT);
+        options.add(CLEAN_SESSION);
+        options.add(CONNECTION_TIMEOUT);
+        options.add(KEEP_ALIVE_INTERVAL);
         return options;
     }
 

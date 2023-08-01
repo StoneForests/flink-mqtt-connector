@@ -12,6 +12,8 @@ import org.apache.flink.table.connector.source.SourceFunctionProvider;
 import org.apache.flink.table.data.RowData;
 import org.apache.flink.types.RowKind;
 
+import static com.example.flink.connector.mqtt.table.MqttOptions.*;
+
 public class MqttDynamicTableSource implements ScanTableSource {
     private ReadableConfig options;
     private ResolvedSchema schema;
@@ -42,7 +44,16 @@ public class MqttDynamicTableSource implements ScanTableSource {
         final DeserializationSchema<RowData> deserializer = decodingFormat.createRuntimeDecoder(
                 ctx,
                 schema.toPhysicalRowDataType());
-        final SourceFunction<RowData> sourceFunction = new MqttSourceFunction(options, deserializer);
+        String broker = this.options.get(HOST_URL);
+        String username = this.options.get(USERNAME);
+        String password = this.options.get(PASSWORD);
+        String topics = this.options.get(SOURCE_TOPICS);
+        boolean cleanSession = this.options.get(CLEAN_SESSION);
+        String clientIdPrefix = this.options.get(CLIENT_ID_PREFIX);
+        Integer connectionTimeout = this.options.get(CONNECTION_TIMEOUT);
+        Integer keepAliveInterval = this.options.get(KEEP_ALIVE_INTERVAL);
+        boolean automaticReconnect = this.options.get(AUTOMATIC_RECONNECT);
+        final SourceFunction<RowData> sourceFunction = new MqttSourceFunction<>(broker, username, password, topics, cleanSession, clientIdPrefix, automaticReconnect, connectionTimeout, keepAliveInterval, deserializer);
         return SourceFunctionProvider.of(sourceFunction, false);
     }
 
