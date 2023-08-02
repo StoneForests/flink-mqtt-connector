@@ -65,6 +65,13 @@
 <!--            <version>${flink.version}</version>-->
 <!--            <scope>provided</scope>-->
 <!--        </dependency>-->
+<!--        &lt;!&ndash;csv格式&ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.flink</groupId>-->
+<!--            <artifactId>flink-csv</artifactId>-->
+<!--            <version>${flink.version}</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
 <!--    </dependencies>-->
 
     <!--本地调试的时候需要引入flink相关依赖，请使用下述dependencies-->
@@ -108,6 +115,12 @@
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-json</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+        <!--csv格式-->
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-csv</artifactId>
             <version>${flink.version}</version>
         </dependency>
         <dependency>

@@ -7,7 +7,6 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -80,14 +79,24 @@ public class MqttSourceFunction<T> extends RichSourceFunction<T> {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage mqttMessage) throws IOException, InterruptedException {
+            public void messageArrived(String topic, MqttMessage mqttMessage) {
                 if (log.isDebugEnabled()) {
                     log.debug("接收消息主题:" + topic);
                     log.debug("接收消息Qos:" + mqttMessage.getQos());
                     log.debug("接收消息内容:\n" + new String(mqttMessage.getPayload()));
                 }
-                queue.put(deserializer.deserialize(mqttMessage.getPayload()));
-
+                T deserialize;
+                try {
+                    deserialize = deserializer.deserialize(mqttMessage.getPayload());
+                } catch (Exception e) {
+                    log.error("反序列化mqtt消息异常，消息内容【{}】", mqttMessage.getPayload(), e);
+                    return;
+                }
+                try {
+                    queue.put(deserialize);
+                } catch (Exception e) {
+                    log.error("queue收集消息异常，消息【{}】", deserialize, e);
+                }
             }
 
             @Override

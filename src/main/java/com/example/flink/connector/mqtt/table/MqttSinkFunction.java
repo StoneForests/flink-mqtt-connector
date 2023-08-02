@@ -44,7 +44,7 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
 
 
     @Override
-    public void invoke(T event, Context context) throws Exception {
+    public void invoke(T event, Context context) {
         if (log.isDebugEnabled()) {
             log.debug("sink invoke...");
             log.debug("message is {}", event);
@@ -55,7 +55,11 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
         message.setQos(this.qos);
         String[] topics = this.topics.split(",");
         for (String topic : topics) {
-            this.client.publish(topic, message);
+            try {
+                this.client.publish(topic, message);
+            } catch (Exception e) {
+                log.error("发布消息：【{}】到topic：【{}】异常", message, topic, e);
+            }
         }
     }
 
