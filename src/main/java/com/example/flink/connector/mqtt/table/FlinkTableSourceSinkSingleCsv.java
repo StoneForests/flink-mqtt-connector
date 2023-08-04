@@ -39,7 +39,7 @@ public class FlinkTableSourceSinkSingleCsv {
                 "    'autoReconnect' = 'true',\n" +
                 "    'connectionTimeout' = '30',\n" +
                 "    'keepAliveInterval' = '60',\n" +
-                "    'sinkParallelism' = '4',\n" +
+                "    'sink.parallelism' = '4',\n" +
                 "    'format' = 'csv'\n" +
                 ")";
         tEnv.executeSql(sinkSql);

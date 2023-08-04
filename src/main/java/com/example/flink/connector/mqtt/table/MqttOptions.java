@@ -76,9 +76,9 @@ public class MqttOptions {
                     .defaultValue(60)
                     .withDescription("the mqtt's connect keep alive interval.");
 
-    public static final ConfigOption<Integer> SINK_PARALLELISM =
-            ConfigOptions.key("sinkParallelism")
-                    .intType()
-                    .defaultValue(1)
-                    .withDescription("the mqtt's sink parallelism.");
+//    public static final ConfigOption<Integer> SINK_PARALLELISM =
+//            ConfigOptions.key("sinkParallelism")
+//                    .intType()
+//                    .defaultValue(1)
+//                    .withDescription("the mqtt's sink parallelism.");
 }
