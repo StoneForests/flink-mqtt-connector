@@ -52,9 +52,11 @@ public class FlinkTableSourceSinkUsingTableDescriptor {
 
         //将flink_mqtt_source中的结果写入到flink_mqtt_sink表中，该语句会一直从mqtt中读取数据并写入到mqtt
 //        tEnv.executeSql("INSERT INTO flink_mqtt_sink SELECT username,age FROM flink_mqtt_source");
-        //下面两句与上面的insert into效果是一样的
-        Table sourceTable = tEnv.from("flink_mqtt_source");
-        sourceTable.executeInsert("flink_mqtt_sink");
+        //下面两句与上面的insert into效果是一样的，但他限制了必须是insert语句
+//        tEnv.createStatementSet().addInsertSql("INSERT INTO flink_mqtt_sink SELECT username,age FROM flink_mqtt_source").execute();
+        //下面两句与上面的insert into效果是一样的，但他不需要写sql，而且是全字段匹配
+        Table sourceTable = tEnv.from(sourceDescriptor);
+        sourceTable.executeInsert(sinkDescriptor);
     }
 
 
