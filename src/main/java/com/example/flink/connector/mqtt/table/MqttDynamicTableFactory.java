@@ -91,8 +91,7 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
     public Set<ConfigOption<?>> optionalOptions() {
         final Set<ConfigOption<?>> options = new HashSet<>();
         options.add(CLIENT_ID_PREFIX);
-        options.add(SOURCE_TOPICS);
-        options.add(SINK_TOPICS);
+        options.add(TOPICS);
         options.add(QOS);
         options.add(AUTOMATIC_RECONNECT);
         options.add(CLEAN_SESSION);

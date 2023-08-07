@@ -21,7 +21,7 @@ public class FlinkTableJustSourceUsingStreamTable {
                 "    'hostUrl' = 'tcp://10.0.113.61:1883',\n" +
                 "    'username' = 'emqxadmin',\n" +
                 "    'password' = 'JevDDzb!5Qfh5Fmr',\n" +
-                "    'sourceTopics' = 'mqtt/source1,mqtt/source2',\n" +
+                "    'topics' = 'mqtt/source1,mqtt/source2',\n" +
                 "    'clientIdPrefix' = 'source_client1',\n" +
                 "    'cleanSession' = 'true',\n" +
                 "    'autoReconnect' = 'true',\n" +

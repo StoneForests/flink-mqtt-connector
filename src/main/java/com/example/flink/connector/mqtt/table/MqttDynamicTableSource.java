@@ -47,7 +47,7 @@ public class MqttDynamicTableSource implements ScanTableSource {
         String broker = this.options.get(HOST_URL);
         String username = this.options.get(USERNAME);
         String password = this.options.get(PASSWORD);
-        String topics = this.options.get(SOURCE_TOPICS);
+        String topics = this.options.get(TOPICS);
         boolean cleanSession = this.options.get(CLEAN_SESSION);
         String clientIdPrefix = this.options.get(CLIENT_ID_PREFIX);
         Integer connectionTimeout = this.options.get(CONNECTION_TIMEOUT);

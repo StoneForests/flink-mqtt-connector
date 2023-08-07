@@ -37,7 +37,7 @@ public class MqttDynamicTableSink implements DynamicTableSink {
         String hostUrl = this.options.get(HOST_URL);
         String username = this.options.get(USERNAME);
         String password = this.options.get(PASSWORD);
-        String topics = this.options.get(SINK_TOPICS);
+        String topics = this.options.get(TOPICS);
         Integer qos = this.options.get(QOS);
         String clientIdPrefix = this.options.get(CLIENT_ID_PREFIX);
         Integer connectionTimeout = this.options.get(CONNECTION_TIMEOUT);

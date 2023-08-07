@@ -28,17 +28,11 @@ public class MqttOptions {
                     .noDefaultValue()
                     .withDescription("the mqtt's connect password.");
 
-    public static final ConfigOption<String> SINK_TOPICS =
-            ConfigOptions.key("sinkTopics")
+    public static final ConfigOption<String> TOPICS =
+            ConfigOptions.key("topics")
                     .stringType()
                     .noDefaultValue()
-                    .withDescription("the mqtt's sink topic.");
-
-    public static final ConfigOption<String> SOURCE_TOPICS =
-            ConfigOptions.key("sourceTopics")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's source topics.");
+                    .withDescription("the mqtt's topic.");
 
     public static final ConfigOption<String> CLIENT_ID_PREFIX =
             ConfigOptions.key("clientIdPrefix")
