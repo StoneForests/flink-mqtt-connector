@@ -5,7 +5,7 @@ import org.apache.flink.table.api.TableEnvironment;
 
 public class FlinkTableSourceSinkSingleCsv {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         EnvironmentSettings settings = EnvironmentSettings.newInstance().inStreamingMode().build();
         TableEnvironment tEnv = TableEnvironment.create(settings);

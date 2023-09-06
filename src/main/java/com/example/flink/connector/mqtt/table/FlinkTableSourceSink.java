@@ -1,12 +1,11 @@
 package com.example.flink.connector.mqtt.table;
 
 import org.apache.flink.table.api.EnvironmentSettings;
-import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 
 public class FlinkTableSourceSink {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         EnvironmentSettings settings = EnvironmentSettings.newInstance().inStreamingMode().build();
         TableEnvironment tEnv = TableEnvironment.create(settings);
