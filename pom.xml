@@ -86,7 +86,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.13</version>
         </dependency>
         <!--选择 Java 或者 Scala API 来构建你的 Table API 和 SQL 程序-->
         <dependency>
