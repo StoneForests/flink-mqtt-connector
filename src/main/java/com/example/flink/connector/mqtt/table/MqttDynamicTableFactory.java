@@ -98,6 +98,8 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
         options.add(CONNECTION_TIMEOUT);
         options.add(KEEP_ALIVE_INTERVAL);
         options.add(SINK_PARALLELISM);
+        options.add(MAX_INFLIGHT);
+        options.add(POLL_INTERVAL);
         return options;
     }
 

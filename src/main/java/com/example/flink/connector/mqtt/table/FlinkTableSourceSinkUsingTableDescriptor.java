@@ -26,6 +26,8 @@ public class FlinkTableSourceSinkUsingTableDescriptor {
                 .option("autoReconnect", "true")
                 .option("connectionTimeout", "30")
                 .option("keepAliveInterval", "60")
+                .option("maxInflight", "200")
+                .option("pollInterval", "5000")
                 .build();
         tEnv.createTemporaryTable("flink_mqtt_source", sourceDescriptor);
 
@@ -46,7 +48,8 @@ public class FlinkTableSourceSinkUsingTableDescriptor {
                 .option("autoReconnect", "true")
                 .option("connectionTimeout", "30")
                 .option("keepAliveInterval", "60")
-//                .option("sink.parallelism", "4")
+                .option("sink.parallelism", "4")
+                .option("maxInflight", "200")
                 .build();
         tEnv.createTemporaryTable("flink_mqtt_sink", sinkDescriptor);
 

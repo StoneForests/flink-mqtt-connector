@@ -46,6 +46,18 @@ public class MqttOptions {
                     .defaultValue(1)
                     .withDescription("the mqtt's sink qos.");
 
+    public static final ConfigOption<Integer> MAX_INFLIGHT =
+            ConfigOptions.key("maxInflight")
+                    .intType()
+                    .defaultValue(10)
+                    .withDescription("the emq's max_inflight.");
+
+    public static final ConfigOption<Long> POLL_INTERVAL =
+            ConfigOptions.key("pollInterval")
+                    .longType()
+                    .defaultValue(100L)
+                    .withDescription("the emq's source poll interval.");
+
     public static final ConfigOption<Boolean> AUTOMATIC_RECONNECT =
             ConfigOptions.key("autoReconnect")
                     .booleanType()

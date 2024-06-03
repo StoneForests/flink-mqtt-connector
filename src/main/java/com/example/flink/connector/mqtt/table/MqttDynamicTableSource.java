@@ -53,7 +53,9 @@ public class MqttDynamicTableSource implements ScanTableSource {
         Integer connectionTimeout = this.options.get(CONNECTION_TIMEOUT);
         Integer keepAliveInterval = this.options.get(KEEP_ALIVE_INTERVAL);
         boolean automaticReconnect = this.options.get(AUTOMATIC_RECONNECT);
-        final SourceFunction<RowData> sourceFunction = new MqttSourceFunction<>(broker, username, password, topics, cleanSession, clientIdPrefix, automaticReconnect, connectionTimeout, keepAliveInterval, deserializer);
+        Integer maxInflight = this.options.get(MAX_INFLIGHT);
+        Long pollInterval = this.options.get(POLL_INTERVAL);
+        final SourceFunction<RowData> sourceFunction = new MqttSourceFunction<>(broker, username, password, topics, cleanSession, clientIdPrefix, automaticReconnect, connectionTimeout, keepAliveInterval, maxInflight, pollInterval, deserializer);
         return SourceFunctionProvider.of(sourceFunction, false);
     }
 

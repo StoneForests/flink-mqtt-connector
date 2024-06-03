@@ -43,7 +43,8 @@ public class MqttDynamicTableSink implements DynamicTableSink {
         Integer connectionTimeout = this.options.get(CONNECTION_TIMEOUT);
         Integer keepAliveInterval = this.options.get(KEEP_ALIVE_INTERVAL);
         boolean automaticReconnect = this.options.get(AUTOMATIC_RECONNECT);
-        final SinkFunction<RowData> sinkFunction = new MqttSinkFunction<>(hostUrl, username, password, topics, qos, clientIdPrefix, connectionTimeout, keepAliveInterval, automaticReconnect, serializer);
+        Integer maxInflight = this.options.get(MAX_INFLIGHT);
+        final SinkFunction<RowData> sinkFunction = new MqttSinkFunction<>(hostUrl, username, password, topics, qos, clientIdPrefix, connectionTimeout, keepAliveInterval, automaticReconnect, maxInflight, serializer);
 
         Integer sinkParallelism = this.options.get(SINK_PARALLELISM);
         return SinkFunctionProvider.of(sinkFunction, sinkParallelism);

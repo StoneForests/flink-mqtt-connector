@@ -27,9 +27,10 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
     private final Integer connectionTimeout;
     private final Integer keepAliveInterval;
     private final boolean automaticReconnect;
+    private final Integer maxInflight;
     private final SerializationSchema<T> serializer;
 
-    public MqttSinkFunction(String hostUrl, String username, String password, String topics, Integer qos, String clientIdPrefix, Integer connectionTimeout, Integer keepAliveInterval, boolean automaticReconnect, SerializationSchema<T> serializer) {
+    public MqttSinkFunction(String hostUrl, String username, String password, String topics, Integer qos, String clientIdPrefix, Integer connectionTimeout, Integer keepAliveInterval, boolean automaticReconnect, Integer maxInflight, SerializationSchema<T> serializer) {
         this.hostUrl = hostUrl;
         this.username = username;
         this.password = password;
@@ -39,6 +40,7 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
         this.connectionTimeout = connectionTimeout;
         this.keepAliveInterval = keepAliveInterval;
         this.automaticReconnect = automaticReconnect;
+        this.maxInflight = maxInflight;
         this.serializer = serializer;
     }
 
@@ -84,6 +86,7 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(this.username);
         options.setPassword(this.password.toCharArray());
+        options.setMaxInflight(this.maxInflight);
         // 设置超时时间
         options.setConnectionTimeout(this.connectionTimeout);
         // 设置会话心跳时间
