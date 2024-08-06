@@ -6,10 +6,12 @@ public class FlinkTableSourceSinkUsingTableDescriptorWithEmbeddedJson3 {
 
     public static void main(String[] args) throws Exception {
 
-        /*
-        嵌套json如下
-        [{"bad_product_number":11399,"device_id":"wireless_calibration_model_data_df58c7c33482fae9","device_state":0,"good_product_number":43036,"groupName":"base","ip":"172.17.1.20","mark":null,"ts":"2023-11-03T17:32:39.000Z","type":"event"}]
-        * */
+        /**
+         *
+         * 直接以jsonarray开头的，flink table好像无法处理
+         * 例如json如下
+         * [{"bad_product_number":11399,"device_id":"wireless_calibration_model_data_df58c7c33482fae9","device_state":0,"good_product_number":43036,"groupName":"base","ip":"172.17.1.20","mark":null,"ts":"2023-11-03T17:32:39.000Z","type":"event"}]
+         */
 
         EnvironmentSettings settings = EnvironmentSettings.newInstance().inStreamingMode().build();
         TableEnvironment tEnv = TableEnvironment.create(settings);

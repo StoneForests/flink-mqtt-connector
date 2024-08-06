@@ -80,6 +80,9 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
     @Override
     public void open(Configuration parameters) throws Exception {
         log.info("sink open...");
+        // flink 1.17.2需要在open中初始化serializer，否则会在byte[] payload = this.serializer.serialize(event);异常
+        // https://stackoverflow.com/questions/78818758/flink-user-defined-sink-connector-can-not-serialize-data-into-json-format
+        this.serializer.open(null);
         super.open(parameters);
         String clientId = this.clientIdPrefix + "_" + UUID.randomUUID();
         this.client = new MqttClient(this.hostUrl, clientId, new MemoryPersistence());

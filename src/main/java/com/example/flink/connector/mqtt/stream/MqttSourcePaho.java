@@ -1,5 +1,6 @@
 package com.example.flink.connector.mqtt.stream;
 
+import com.example.flink.connector.mqtt.common.MyMqttMessage;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;

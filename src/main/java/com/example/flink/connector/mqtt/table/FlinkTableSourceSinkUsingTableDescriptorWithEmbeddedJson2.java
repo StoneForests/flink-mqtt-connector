@@ -46,7 +46,7 @@ public class FlinkTableSourceSinkUsingTableDescriptorWithEmbeddedJson2 {
         String sinkSql = "create table t_out(name string,  xuexi STRING, dt string) with ('connector' = 'print')";
         tEnv.executeSql(sinkSql);
 
-        //将flink_mqtt_source中的结果写入到flink_mqtt_sink表中，该语句会一直从mqtt中读取数据并写入到mqtt
+        //将flink_mqtt_source中的结果写入到flink_mqtt_sink表中
         tEnv.executeSql("INSERT INTO\n" +
                 "    t_out\n" +
                 "SELECT\n" +
