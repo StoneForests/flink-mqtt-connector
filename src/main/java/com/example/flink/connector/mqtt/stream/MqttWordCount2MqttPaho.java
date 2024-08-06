@@ -1,5 +1,6 @@
 package com.example.flink.connector.mqtt.stream;
 
+import com.example.flink.connector.mqtt.common.MyMqttMessage;
 import org.apache.flink.api.common.functions.FlatMapFunction;
 import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.tuple.Tuple2;

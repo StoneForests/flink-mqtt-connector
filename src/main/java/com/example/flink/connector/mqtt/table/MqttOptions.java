@@ -28,17 +28,11 @@ public class MqttOptions {
                     .noDefaultValue()
                     .withDescription("the mqtt's connect password.");
 
-    public static final ConfigOption<String> SINK_TOPICS =
-            ConfigOptions.key("sinkTopics")
+    public static final ConfigOption<String> TOPICS =
+            ConfigOptions.key("topics")
                     .stringType()
                     .noDefaultValue()
-                    .withDescription("the mqtt's sink topic.");
-
-    public static final ConfigOption<String> SOURCE_TOPICS =
-            ConfigOptions.key("sourceTopics")
-                    .stringType()
-                    .noDefaultValue()
-                    .withDescription("the mqtt's source topics.");
+                    .withDescription("the mqtt's topic.");
 
     public static final ConfigOption<String> CLIENT_ID_PREFIX =
             ConfigOptions.key("clientIdPrefix")
@@ -51,6 +45,18 @@ public class MqttOptions {
                     .intType()
                     .defaultValue(1)
                     .withDescription("the mqtt's sink qos.");
+
+    public static final ConfigOption<Integer> MAX_INFLIGHT =
+            ConfigOptions.key("maxInflight")
+                    .intType()
+                    .defaultValue(10)
+                    .withDescription("the emq's max_inflight.");
+
+    public static final ConfigOption<Long> POLL_INTERVAL =
+            ConfigOptions.key("pollInterval")
+                    .longType()
+                    .defaultValue(100L)
+                    .withDescription("the emq's source poll interval.");
 
     public static final ConfigOption<Boolean> AUTOMATIC_RECONNECT =
             ConfigOptions.key("autoReconnect")
@@ -76,9 +82,9 @@ public class MqttOptions {
                     .defaultValue(60)
                     .withDescription("the mqtt's connect keep alive interval.");
 
-    public static final ConfigOption<Integer> SINK_PARALLELISM =
-            ConfigOptions.key("sinkParallelism")
-                    .intType()
-                    .defaultValue(1)
-                    .withDescription("the mqtt's sink parallelism.");
+//    public static final ConfigOption<Integer> SINK_PARALLELISM =
+//            ConfigOptions.key("sinkParallelism")
+//                    .intType()
+//                    .defaultValue(1)
+//                    .withDescription("the mqtt's sink parallelism.");
 }

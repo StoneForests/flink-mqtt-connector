@@ -11,6 +11,7 @@ import org.apache.flink.table.connector.sink.SinkFunctionProvider;
 import org.apache.flink.table.data.RowData;
 
 import static com.example.flink.connector.mqtt.table.MqttOptions.*;
+import static org.apache.flink.table.factories.FactoryUtil.SINK_PARALLELISM;
 
 public class MqttDynamicTableSink implements DynamicTableSink {
     private ReadableConfig options;
@@ -36,16 +37,17 @@ public class MqttDynamicTableSink implements DynamicTableSink {
         String hostUrl = this.options.get(HOST_URL);
         String username = this.options.get(USERNAME);
         String password = this.options.get(PASSWORD);
-        String topics = this.options.get(SINK_TOPICS);
+        String topics = this.options.get(TOPICS);
         Integer qos = this.options.get(QOS);
         String clientIdPrefix = this.options.get(CLIENT_ID_PREFIX);
         Integer connectionTimeout = this.options.get(CONNECTION_TIMEOUT);
         Integer keepAliveInterval = this.options.get(KEEP_ALIVE_INTERVAL);
         boolean automaticReconnect = this.options.get(AUTOMATIC_RECONNECT);
-        final SinkFunction<RowData> sinkFunction = new MqttSinkFunction<>(hostUrl, username, password, topics, qos, clientIdPrefix, connectionTimeout, keepAliveInterval, automaticReconnect, serializer);
+        Integer maxInflight = this.options.get(MAX_INFLIGHT);
+        final SinkFunction<RowData> sinkFunction = new MqttSinkFunction<>(hostUrl, username, password, topics, qos, clientIdPrefix, connectionTimeout, keepAliveInterval, automaticReconnect, maxInflight, serializer);
 
         Integer sinkParallelism = this.options.get(SINK_PARALLELISM);
-        return SinkFunctionProvider.of(sinkFunction,sinkParallelism);
+        return SinkFunctionProvider.of(sinkFunction, sinkParallelism);
     }
 
     @Override

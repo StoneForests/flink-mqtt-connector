@@ -1,4 +1,4 @@
-package com.example.flink.connector.mqtt.stream;
+package com.example.flink.connector.mqtt.common;
 
 
 import java.io.Serializable;

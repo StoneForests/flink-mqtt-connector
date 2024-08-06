@@ -1,12 +1,11 @@
 package com.example.flink.connector.mqtt.table;
 
 import org.apache.flink.table.api.EnvironmentSettings;
-import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableEnvironment;
 
 public class FlinkTableSourceSink {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         EnvironmentSettings settings = EnvironmentSettings.newInstance().inStreamingMode().build();
         TableEnvironment tEnv = TableEnvironment.create(settings);
@@ -18,7 +17,7 @@ public class FlinkTableSourceSink {
                 "    'hostUrl' = 'tcp://10.0.113.61:1883',\n" +
                 "    'username' = 'emqxadmin',\n" +
                 "    'password' = 'JevDDzb!5Qfh5Fmr',\n" +
-                "    'sourceTopics' = 'mqtt/source1,mqtt/source2',\n" +
+                "    'topics' = 'mqtt/source1,mqtt/source2',\n" +
                 "    'clientIdPrefix' = 'source_client2',\n" +
                 "    'cleanSession' = 'true',\n" +
                 "    'autoReconnect' = 'true',\n" +
@@ -36,13 +35,13 @@ public class FlinkTableSourceSink {
                 "    'hostUrl' = 'tcp://10.0.113.61:1883',\n" +
                 "    'username' = 'emqxadmin',\n" +
                 "    'password' = 'JevDDzb!5Qfh5Fmr',\n" +
-                "    'sinkTopics' = 'mqtt/sink1,mqtt/sink2',\n" +
+                "    'topics' = 'mqtt/sink1,mqtt/sink2',\n" +
                 "    'qos' = '1',\n" +
                 "    'clientIdPrefix' = 'sink_client2',\n" +
                 "    'autoReconnect' = 'true',\n" +
                 "    'connectionTimeout' = '30',\n" +
                 "    'keepAliveInterval' = '60',\n" +
-                "    'sinkParallelism' = '4',\n" +
+                "    'sink.parallelism' = '4',\n" +
                 "    'format' = 'json'\n" +
                 ")";
         tEnv.executeSql(sinkSql);

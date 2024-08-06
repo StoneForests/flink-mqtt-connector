@@ -1,15 +1,18 @@
 package com.example.flink.connector.mqtt.table;
 
-import org.apache.flink.table.api.EnvironmentSettings;
-import org.apache.flink.table.api.TableEnvironment;
+import org.apache.flink.streaming.api.datastream.DataStream;
+import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
+import org.apache.flink.table.api.Table;
 import org.apache.flink.table.api.TableResult;
+import org.apache.flink.table.api.bridge.java.StreamTableEnvironment;
+import org.apache.flink.types.Row;
 
-public class FlinkTableJustSource {
+public class FlinkTableJustSourceUsingStreamTable {
 
     public static void main(String[] args) throws Exception {
 
-        EnvironmentSettings settings = EnvironmentSettings.newInstance().inStreamingMode().build();
-        TableEnvironment tEnv = TableEnvironment.create(settings);
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        StreamTableEnvironment tEnv = StreamTableEnvironment.create(env);
         String sourceSql = "create table flink_mqtt_source(\n" +
                 "  username STRING,\n" +
                 "  age INTEGER\n" +
@@ -29,11 +32,13 @@ public class FlinkTableJustSource {
         tEnv.executeSql(sourceSql);
 
         //查询flink_mqtt_source中的数据，下述语句会阻塞住，
-        TableResult tableResult = tEnv.executeSql("SELECT * FROM flink_mqtt_source");
+        Table table = tEnv.sqlQuery("SELECT * FROM flink_mqtt_source");
+        // 将结果转换为 DataStream
+        DataStream<Row> resultStream = tEnv.toDataStream(table);
         // 打印输出结果
-        tableResult.print();
-        // 启动任务并等待任务完成
-        tEnv.execute("Flink MQTT Source Example");
+        resultStream.print();
+        // 执行作业
+        env.execute("Table to DataStream Example");
     }
 
 }

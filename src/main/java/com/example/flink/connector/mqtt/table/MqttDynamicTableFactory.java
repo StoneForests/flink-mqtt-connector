@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static com.example.flink.connector.mqtt.table.MqttOptions.*;
+import static org.apache.flink.table.factories.FactoryUtil.SINK_PARALLELISM;
 import static org.apache.flink.table.factories.FactoryUtil.createTableFactoryHelper;
 
 public class MqttDynamicTableFactory implements DynamicTableSourceFactory, DynamicTableSinkFactory {
@@ -90,14 +91,15 @@ public class MqttDynamicTableFactory implements DynamicTableSourceFactory, Dynam
     public Set<ConfigOption<?>> optionalOptions() {
         final Set<ConfigOption<?>> options = new HashSet<>();
         options.add(CLIENT_ID_PREFIX);
-        options.add(SOURCE_TOPICS);
-        options.add(SINK_TOPICS);
+        options.add(TOPICS);
         options.add(QOS);
         options.add(AUTOMATIC_RECONNECT);
         options.add(CLEAN_SESSION);
         options.add(CONNECTION_TIMEOUT);
         options.add(KEEP_ALIVE_INTERVAL);
         options.add(SINK_PARALLELISM);
+        options.add(MAX_INFLIGHT);
+        options.add(POLL_INTERVAL);
         return options;
     }
 

@@ -27,9 +27,10 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
     private final Integer connectionTimeout;
     private final Integer keepAliveInterval;
     private final boolean automaticReconnect;
+    private final Integer maxInflight;
     private final SerializationSchema<T> serializer;
 
-    public MqttSinkFunction(String hostUrl, String username, String password, String topics, Integer qos, String clientIdPrefix, Integer connectionTimeout, Integer keepAliveInterval, boolean automaticReconnect, SerializationSchema<T> serializer) {
+    public MqttSinkFunction(String hostUrl, String username, String password, String topics, Integer qos, String clientIdPrefix, Integer connectionTimeout, Integer keepAliveInterval, boolean automaticReconnect, Integer maxInflight, SerializationSchema<T> serializer) {
         this.hostUrl = hostUrl;
         this.username = username;
         this.password = password;
@@ -39,6 +40,7 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
         this.connectionTimeout = connectionTimeout;
         this.keepAliveInterval = keepAliveInterval;
         this.automaticReconnect = automaticReconnect;
+        this.maxInflight = maxInflight;
         this.serializer = serializer;
     }
 
@@ -78,12 +80,16 @@ public class MqttSinkFunction<T> extends RichSinkFunction<T> {
     @Override
     public void open(Configuration parameters) throws Exception {
         log.info("sink open...");
+        // flink 1.17.2需要在open中初始化serializer，否则会在byte[] payload = this.serializer.serialize(event);异常
+        // https://stackoverflow.com/questions/78818758/flink-user-defined-sink-connector-can-not-serialize-data-into-json-format
+        this.serializer.open(null);
         super.open(parameters);
         String clientId = this.clientIdPrefix + "_" + UUID.randomUUID();
         this.client = new MqttClient(this.hostUrl, clientId, new MemoryPersistence());
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(this.username);
         options.setPassword(this.password.toCharArray());
+        options.setMaxInflight(this.maxInflight);
         // 设置超时时间
         options.setConnectionTimeout(this.connectionTimeout);
         // 设置会话心跳时间
